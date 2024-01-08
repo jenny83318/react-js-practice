@@ -1,5 +1,5 @@
-1. npm install
-2. editing the file node_modules/react-scripts/config/webpack.config.js, and pasting this after the line performance: false
+### 1. npm install
+### 2. editing the file node_modules/react-scripts/config/webpack.config.js, and pasting this after the line performance: false
    ```js
       ignoreWarnings: [
       // Ignore warnings raised by source-map-loader.
@@ -20,3 +20,4 @@
       },
     ]
    ```
+### 3. npm start
