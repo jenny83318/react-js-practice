@@ -1,5 +1,4 @@
 import firebase from 'firebase/app';
-
 const firebaseConfig = {
     apiKey: "AIzaSyA6A0a_1pqxtbkRSQ70a7vALUk1YIhMJng",
     authDomain: "social-cool-91927.firebaseapp.com",
