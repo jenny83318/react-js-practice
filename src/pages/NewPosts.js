@@ -14,6 +14,7 @@ function NewPosts() {
     const [topicName, setTopicName] = useState("");
     const [file, setFile] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+
     React.useEffect(() => {
         firebase
             .firestore()

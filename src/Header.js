@@ -11,12 +11,8 @@ function Header() {
         });
     }, []);
     return <Menu>
-        <Menu.Item as={Link} to="/">
-            Social Cool
-        </Menu.Item>
-        <Menu.Item>
-            <Search />
-        </Menu.Item>
+        <Menu.Item as={Link} to="/posts"> Social Cool</Menu.Item>
+        <Menu.Item><Search /></Menu.Item>
         <Menu.Menu position='right'>
             {user ? (
                 <>
@@ -26,7 +22,7 @@ function Header() {
                     <Menu.Item as={Link} to="/member">
                         會員
                     </Menu.Item>
-                    <Menu.Item onClick={()=> firebase.auth().signOut()}>
+                    <Menu.Item onClick={() => firebase.auth().signOut()}>
                         登出
                     </Menu.Item>
                 </>
