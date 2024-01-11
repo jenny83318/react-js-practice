@@ -18,7 +18,7 @@ function Signin() {
         if (activeItem === 'register') {
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then(() => {
-                    navigate("/");
+                    navigate("/posts");
                     setIsLoading(false);
                 })
                 .catch((error) => {
@@ -41,7 +41,7 @@ function Signin() {
         } else if (activeItem === 'signin') {
             firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(() => {
-                    navigate("/");
+                    navigate("/posts");
                     setIsLoading(false);
                 })
                 .catch((error) => {

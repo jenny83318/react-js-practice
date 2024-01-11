@@ -1,7 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Container, Grid, Header, Icon, Image, Segment, Comment, Form } from "semantic-ui-react";
-import Topics from "../components/Topics";
+import { Header, Icon, Image, Segment, Comment, Form } from "semantic-ui-react";
 import firebase from "../utils/firebase";
 
 function Post() {
@@ -111,7 +110,7 @@ function Post() {
                 <Header>共 {post.commentsCount || 0} 則留言</Header>
                 {comments.map(comment => {
                     return (
-                        <Comment>
+                        <Comment key={comment.createdAt}>
                             <Comment.Avatar src={comment.author.photoURL} />
                             <Comment.Content>
                                 <Comment.Author as="span">{comment.author.displayName || '使用者'}</Comment.Author>

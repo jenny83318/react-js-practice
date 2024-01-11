@@ -1,23 +1,52 @@
 import React from "react";
-import { Item, Image, Icon } from "semantic-ui-react";
+import { useLocation } from 'react-router-dom'
+import { Item } from "semantic-ui-react";
+import { Waypoint } from "react-waypoint";
 import firebase from "../utils/firebase";
-import { Link } from 'react-router-dom';
+import Post from "../components/Post";
 function Posts() {
     const [posts, setPosts] = React.useState([]);
+    const location = useLocation();
+    const urlSearchParams = new URLSearchParams(location.search);
+    const currentTopic = urlSearchParams.get("topic");
+    const lastPostSnapshotRef = React.useRef();
 
     React.useEffect(() => {
-        firebase
-            .firestore()
-            .collection("posts")
-            .get()
-            .then((collectionSnapshot) => {
-                const data = collectionSnapshot.docs.map((docSnapshot) => {
-                    const id = docSnapshot.id;
-                    return { ...docSnapshot.data(), id };
+        if (currentTopic) {
+            firebase
+                .firestore()
+                .collection("posts")
+                .where('topic', '==', currentTopic)
+                .orderBy("createdAt", 'desc')
+                .limit(6)
+                .get()
+                .then((collectionSnapshot) => {
+                    const data = collectionSnapshot.docs.map((docSnapshot) => {
+                        const id = docSnapshot.id;
+                        return { ...docSnapshot.data(), id };
+                    });
+                    lastPostSnapshotRef.current = collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
+                    console.log('lastPostSnapshotRef', lastPostSnapshotRef.current)
+                    setPosts([...posts, ...data]);
                 });
-                setPosts(data);
-            });
-    }, []);
+        } else {
+            firebase
+                .firestore()
+                .collection("posts")
+                .orderBy("createdAt", 'desc')
+                .limit(6)
+                .get()
+                .then((collectionSnapshot) => {
+                    const data = collectionSnapshot.docs.map((docSnapshot) => {
+                        const id = docSnapshot.id;
+                        return { ...docSnapshot.data(), id };
+                    });
+                    lastPostSnapshotRef.current = collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
+                    console.log('lastPostSnapshotRef', lastPostSnapshotRef.current)
+                    setPosts([...posts, ...data]);
+                });
+        }
+    }, [currentTopic]);
 
     /**預設16等分 */
     return (
@@ -25,25 +54,54 @@ function Posts() {
             <Item.Group>
                 {posts.map((post) => {
                     return (
-                        <Item key={post.id} as={Link} to={`/posts/${post.id}`}>
-                            <Item.Image src={post.imgURL || "https://react.semantic-ui.com/images/wireframe/image.png"} size="small" />
-                            <Item.Content>
-                                <Item.Meta>
-                                    {post.author.photoURL ? (
-                                        <Image src={post.author.photoURL} />
-                                    ) : (
-                                        <Icon name="user"></Icon>
-                                    )}
-                                    {post.topic} . {post.author.displayName || "使用者"}
-                                </Item.Meta>
-                                <Item.Header>{post.title}</Item.Header>
-                                <Item.Description>{post.content}</Item.Description>
-                                <Item.Extra>留言 {post.commentsCount || 0} . 讚 {post.likedBy?.length || 0}</Item.Extra>
-                            </Item.Content>
-                        </Item>
+                        <Post post={post} key={post.id} />
                     );
                 })}
             </Item.Group>
+            <Waypoint onEnter={() => {
+                console.log('lastPostSnapshotRef.current', lastPostSnapshotRef.current)
+                if (lastPostSnapshotRef.current) {
+                    console.log('IF= > lastPostSnapshotRef.current', lastPostSnapshotRef.current)
+                    if (currentTopic) {
+                        console.log('currentTopic', currentTopic)
+                        firebase
+                            .firestore()
+                            .collection("posts")
+                            .where('topic', '==', currentTopic)
+                            .orderBy("createdAt", 'desc')
+                            .startAfter(lastPostSnapshotRef.current)
+                            .limit(3)
+                            .get()
+                            .then((collectionSnapshot) => {
+                                const data = collectionSnapshot.docs.map((docSnapshot) => {
+                                    const id = docSnapshot.id;
+                                    return { ...docSnapshot.data(), id };
+                                });
+                                lastPostSnapshotRef.current = collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
+                                setPosts([...posts, ...data]);
+                            });
+                    } else {
+                        console.log('ELSE => lastPostSnapshotRef.current', lastPostSnapshotRef.current)
+                        firebase
+                            .firestore()
+                            .collection("posts")
+                            .orderBy("createdAt", 'desc')
+                            .startAfter(lastPostSnapshotRef.current)
+                            .limit(3)
+                            .get()
+                            .then((collectionSnapshot) => {
+                                const data = collectionSnapshot.docs.map((docSnapshot) => {
+                                    const id = docSnapshot.id;
+                                    return { ...docSnapshot.data(), id };
+                                });
+                                lastPostSnapshotRef.current = collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
+                                setPosts([...posts, ...data]);
+                            });
+                    }
+                }
+
+
+            }} />
         </>
     );
 }

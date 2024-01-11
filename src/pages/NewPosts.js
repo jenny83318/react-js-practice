@@ -62,7 +62,7 @@ function NewPosts() {
                 console.log("sendData = ", sendData);
                 documentRef.set(sendData).then(() => {
                     setIsLoading(false);
-                    navigate("/");
+                    navigate("/posts");
                 });
             });
         });
