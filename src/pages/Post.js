@@ -72,7 +72,7 @@ function Post() {
             to: post.author.email,
             message: {
                 subject:`新訊息: ${firebase.auth().currentUser.displayName} 剛剛回覆了你的文章`,
-                html: `<a herf="${window.location.origin}/posts/${postId}">前往文章</a>`
+                html: `<a href="${window.location.origin}/posts/${postId}">前往文章</a>`
             }
         })
 

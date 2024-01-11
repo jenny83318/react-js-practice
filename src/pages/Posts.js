@@ -13,6 +13,7 @@ function Posts() {
 
     React.useEffect(() => {
         if (currentTopic) {
+            console.log('currentTopic', currentTopic)
             firebase
                 .firestore()
                 .collection("posts")
@@ -27,7 +28,7 @@ function Posts() {
                     });
                     lastPostSnapshotRef.current = collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
                     console.log('lastPostSnapshotRef', lastPostSnapshotRef.current)
-                    setPosts([...posts, ...data]);
+                    setPosts(data);
                 });
         } else {
             firebase
@@ -43,7 +44,7 @@ function Posts() {
                     });
                     lastPostSnapshotRef.current = collectionSnapshot.docs[collectionSnapshot.docs.length - 1];
                     console.log('lastPostSnapshotRef', lastPostSnapshotRef.current)
-                    setPosts([...posts, ...data]);
+                    setPosts(data);
                 });
         }
     }, [currentTopic]);
