@@ -14,10 +14,11 @@ import MyCollections from "./pages/MyCollections";
 import MySettings from "./pages/MySettings";
 
 function App() {
-    const [user, serUser] = React.useState(null);
+    const [user, serUser] = React.useState(undefined);
     React.useEffect(()=>{
         firebase.auth().onAuthStateChanged((currentUser)=>{
-            serUser(currentUser)
+            serUser(currentUser);
+            console.log("current User", currentUser)
         })
     },[])
     return (
@@ -25,10 +26,10 @@ function App() {
             <Header user={user}/>
             <Routes>
                 <Route path="/posts" element={<PostView />} >
-                    <Route path="/posts/:postId" exact element={user ? <Post /> : <Navigate to="/posts" />} />
+                    <Route path="/posts/:postId" exact element={user !== null ? <Post /> : <Navigate to="/posts" />} />
                     <Route path="/posts" element={<Posts />} /></Route>
-                <Route path="/signin" exact element={ user ? <Navigate to="/posts" /> : <Signin />}></Route>
-                <Route path="/new-post" exact element={user ? <NewPosts /> : <Navigate to="/posts" />}></Route>
+                <Route path="/signin" exact element={ user !== null? <Navigate to="/posts" /> : <Signin />}></Route>
+                <Route path="/new-post" exact element={user !== null? <NewPosts /> : <Navigate to="/posts" />}></Route>
                 <Route path="/member" element={<MemberView user={user} />}>
                     <Route path="/member/posts" element={<MyPosts />} />
                     <Route path="/member/collections" element={<MyCollections user={user}  />} />
@@ -55,7 +56,7 @@ function PostView() {
 }
 
 function MemberView({user}) {
-    return ( user ? <Container>
+    return ( user? <Container>
         <Grid>
             <Grid.Row>
                 <Grid.Column width={3}>

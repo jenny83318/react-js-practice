@@ -66,19 +66,29 @@ function Post() {
                 photoURL: firebase.auth().currentUser.photoURL || ''
             }
         });
+
+        const mailRef =firestore.collection('mail').doc();
+        batch.set(mailRef,{
+            to: post.author.email,
+            message: {
+                subject:`新訊息: ${firebase.auth().currentUser.displayName} 剛剛回覆了你的文章`,
+                html: `<a herf="${window.location.origin}/posts/${postId}">前往文章</a>`
+            }
+        })
+
         batch.commit().then(() => {
             setCommentContent('');
             setIsLoading(false);
         });
     }
 
-    const isCollected = post.collectedBy?.includes(firebase.auth().currentUser.uid);
-    const isLiked = post.likedBy?.includes(firebase.auth().currentUser.uid);
+    const isCollected = post.collectedBy?.includes(firebase.auth().currentUser?.uid||'');
+    const isLiked = post.likedBy?.includes(firebase.auth().currentUser?.uid || '');
 
     return (
         <>
-            {post.author.postURL ? (
-                <Image src={post.author.postURL} />
+            {post.author.photoURL ? (
+                <Image src={post.author.photoURL}  avatar/>
             ) : (
                 <Icon name="user circle" />
             )}

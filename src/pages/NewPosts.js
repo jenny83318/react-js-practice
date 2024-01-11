@@ -40,32 +40,36 @@ function NewPosts() {
         : "https://react.semantic-ui.com/images/wireframe/image.png";
 
     function onSubmit() {
-        setIsLoading(true);
         const documentRef = firebase.firestore().collection("posts").doc();
-        const metadata = { contentType: file.type };
-        const fileRef = firebase.storage().ref("post-images/" + documentRef.id);
-        fileRef.put(file, metadata).then(() => {
-            fileRef.getDownloadURL().then((imgURL) => {
-                const sendData = {
-                    title,
-                    content,
-                    topic: topicName,
-                    createdAt: firebase.firestore.Timestamp.now(),
-                    author: {
-                        displayName: firebase.auth().currentUser.displayName || "",
-                        photoURL: firebase.auth().currentUser.photoURL || "",
-                        uid: firebase.auth().currentUser.uid,
-                        email: firebase.auth().currentUser.email,
-                    },
-                    imgURL,
-                };
-                console.log("sendData = ", sendData);
-                documentRef.set(sendData).then(() => {
-                    setIsLoading(false);
-                    navigate("/posts");
+        if (file == null) {
+            alert('請選擇要上傳的圖片')
+        } else {
+            setIsLoading(true);
+            const metadata = { contentType: file.type };
+            const fileRef = firebase.storage().ref("post-images/" + documentRef.id);
+            fileRef.put(file, metadata).then(() => {
+                fileRef.getDownloadURL().then((imgURL) => {
+                    const sendData = {
+                        title,
+                        content,
+                        topic: topicName,
+                        createdAt: firebase.firestore.Timestamp.now(),
+                        author: {
+                            displayName: firebase.auth().currentUser.displayName || "",
+                            photoURL: firebase.auth().currentUser.photoURL || "",
+                            uid: firebase.auth().currentUser.uid,
+                            email: firebase.auth().currentUser.email,
+                        },
+                        imgURL,
+                    };
+                    console.log("sendData = ", sendData);
+                    documentRef.set(sendData).then(() => {
+                        setIsLoading(false);
+                        navigate("/posts");
+                    });
                 });
             });
-        });
+        }
     }
     return (
         <Container>
