@@ -1,4 +1,4 @@
-#### This project was created based on a ! [YouTube tutorial](https://www.youtube.com/watch?v=EwvFcFpZWio&ab_channel=%E8%B0%B7%E5%93%A5) I watched.
+#### This project was created based on a [YouTube tutorial](https://www.youtube.com/watch?v=EwvFcFpZWio&ab_channel=%E8%B0%B7%E5%93%A5) I watched.
 #### [Demo websit hosting in firebase](https://social-cool-91927.web.app/posts)
 ### 1. npm install
 ### 2. editing the file node_modules/react-scripts/config/webpack.config.js, and pasting this after the line performance: false
